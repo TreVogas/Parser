@@ -1,12 +1,13 @@
 import requests
 import lxml
 from bs4 import BeautifulSoup
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 print("Enter the city")
 city = input()
 print("Enter the profession")
 profeccion = input()
+base_url = "https://hh.ru"
 URL = 'https://hh.ru/search/vacancy?fromSearchLine=true&st=searchVacancy&text=' + quote(city) + '+' + quote(
     profeccion)
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
@@ -44,7 +45,8 @@ def parse():
         linking = soup.find_all(class_='bloko-button HH-Pager-Controls-Next HH-Pager-Control')
         print(linking[0])
         single_link = linking[0].get("href")
-        html = get_html(single_link)
+        cur_url = urljoin(base_url, single_link)
+        html = get_html(cur_url)
         print(html)
         get_content(html.text)
         pages = pages + 1
