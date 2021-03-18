@@ -28,7 +28,8 @@ def get_content(html):
     print(links)
     number_of_link = 0
     for item in items:
-        print(item.find('div', class_='vacancy-serp-item__info').text)
+        cur_vacancy = item.find('div', class_='vacancy-serp-item__info')
+        print(cur_vacancy.text)
         print(links[number_of_link].get('href'))
         number_of_link = number_of_link + 1
 
@@ -41,9 +42,9 @@ def parse():
     while pages != 2:
         soup = BeautifulSoup(html.text, 'lxml')
         linking = soup.find_all(class_='bloko-button HH-Pager-Controls-Next HH-Pager-Control')
-        print(linking)
-        linking = linking.get("href")
-        html = get_html(linking)
+        print(linking[0])
+        single_link = linking[0].get("href")
+        html = get_html(single_link)
         print(html)
         get_content(html.text)
         pages = pages + 1
