@@ -65,7 +65,8 @@ def parse():
     pages_count = get_pages_count(html.text)
     info = {}
     number_of_vacancy = 1
-    while pages != pages_count:
+    # Python idiom for loops like that.
+    for pages in range(pages_count):
         single_link = URL + "&page=" + str(pages)
         cur_url = urljoin(base_url, single_link)
         print(cur_url)
@@ -84,15 +85,26 @@ def parse():
         pages = pages + 1
         links.clear()
         salaries.clear()
-    else:
-        print('End')
-        return json.dumps(info)
 
+    print('End')
+    return info
 
-parse()
-print(parse())
-with open("f.json", 'w') as file_end:#wb - write bytes
-    json.dump(parse(), file_end)
+# parse once and then use the result.
+# no need to call "parse" 3 times
+info = parse()
+
+# set the flag so it doesn't try to convert Unicode chars
+s = json.dumps(info, ensure_ascii=False)
+print(s)
+
+fn = r'c:/temp/f.json'
+
+# before writing to file, make sure
+# - open for writing bytes
+# - convert string to bytes before writing
+with open(fn, 'wb') as file_end:#wb - write bytes
+    file_end.write(bytes(s, encoding='utf-16'))
+
 # vacancy-serp-item__row vacancy-serp-item__row_header
 # https://ekaterinburg.hh.ru/vacancies/programmist?page=1
 # https://hh.ru/search/vacancy?area=1&fromSearchLine=true&st=searchVacancy&text=
