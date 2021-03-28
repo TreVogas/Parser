@@ -82,7 +82,6 @@ def parse():
             info[number_of_vacancy] = [salaries[i * 2], links[i], salaries[i * 2 + 1].replace(u'\xa0', u' ')]
             # .replace('\xa0', " ") - change symbol \xa0 in utf-8 on ' '
             number_of_vacancy = number_of_vacancy + 1
-        pages = pages + 1
         links.clear()
         salaries.clear()
 
