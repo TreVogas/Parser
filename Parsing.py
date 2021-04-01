@@ -1,14 +1,17 @@
 import requests
-import lxml
 from bs4 import BeautifulSoup
 from urllib.parse import quote, urljoin
-from time import sleep
 import urllib3
 import json
-
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
 
 # proxy = {"https": "localhost:8080"} this line turn on proxy
-
+cred = credentials.Certificate(r'C:\Users\Владимир\Desktop\uirebase\key_firebase.json')
+default_app = firebase_admin.initialize_app(cred, {'databaseURL': 'https://parsing-ebd79-default-rtdb.firebaseio.com/'})
+ref = db.reference("/")
+# help("modules") - give the info about modules downloaded in pc or virtual inviromemental modules
 print("Enter the city")
 city = input()
 print("Enter the profession")
@@ -88,6 +91,7 @@ def parse():
     print('End')
     return info
 
+
 # parse once and then use the result.
 # no need to call "parse" 3 times
 info = parse()
@@ -96,16 +100,22 @@ info = parse()
 s = json.dumps(info, ensure_ascii=False)
 print(s)
 
-fn = r'c:/temp/f.json'
+# fn = r'C:\Users\Владимир\PycharmProjects\Parser\f.json'
 
 # before writing to file, make sure
 # - open for writing bytes
 # - convert string to bytes before writing
-with open(fn, 'wb') as file_end:#wb - write bytes
+with open('f.json', 'wb') as file_end:  # wb - write bytes
     file_end.write(bytes(s, encoding='utf-16'))
-
+    firebase_json = ref.get()
+    print(firebase_json)
+    print(file_end)
+    ref.delete()
+    ref.update(info)
+print("\U0001f637")
 # vacancy-serp-item__row vacancy-serp-item__row_header
 # https://ekaterinburg.hh.ru/vacancies/programmist?page=1
 # https://hh.ru/search/vacancy?area=1&fromSearchLine=true&st=searchVacancy&text=
 # https://hh.ru/search/vacancy?area=1&fromSearchLine=true&st=searchVacancy&text=https://hh.ru/search/vacancy?area=1&fromSearchLine=true&st=searchVacancy&text=%D0%BC%D0%BE%D1%81%D0%BA%D0%B2%D0%B0+%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82+%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82
 # https://hh.ru/search/vacancy?area=3&clusters=true&enable_snippets=true&text=%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82&only_with_salary=true&salary=75325&from=cluster_compensation&showClusters=true
+# firebase_admin = firebase_admin.initialize_app(cred, {'databaseURL': 'https://your-firebase-db'})
