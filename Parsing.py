@@ -54,10 +54,10 @@ def get_info(html):
 
 def get_pages_count(html):  # get the number of pages, which will be scraping
     soup = BeautifulSoup(html, 'html.parser')
-    count_page = soup.find_all('a', class_='bloko-button HH-Pager-Control')
+    count_page = soup.find_all('span', class_='pager-item-not-in-short-range')
     print(count_page)
     if count_page:
-        return int(count_page[-1].get_text())
+        return int(count_page[len(count_page)-1].get_text())
     else:
         return 1
 
@@ -66,6 +66,7 @@ def parse():
     pages = 0
     html = get_html(URL)
     pages_count = get_pages_count(html.text)
+    print(pages_count)
     info = {}
     number_of_vacancy = 1
     # Python idiom for loops like that.
