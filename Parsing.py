@@ -52,12 +52,22 @@ def get_info(html):
     return all_salaries
 
 
+def get_day(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    days = soup.find_all('span', class_='vacancy-serp-item__publication-date '
+                                        'vacancy-serp-item__publication-date_long')
+    all_days = []
+    for day in days:
+        all_days.append(day.text)
+    return all_days
+
+
 def get_pages_count(html):  # get the number of pages, which will be scraping
     soup = BeautifulSoup(html, 'html.parser')
     count_page = soup.find_all('span', class_='pager-item-not-in-short-range')
     print(count_page)
     if count_page:
-        return int(count_page[len(count_page)-1].get_text())
+        return int(count_page[len(count_page) - 1].get_text())
     else:
         return 1
 
@@ -76,6 +86,7 @@ def parse():
         print(cur_url)
         html = get_html(cur_url)
         links = get_links(html.text)
+        day_s = get_day(html.text)
         content_count = len(links)
         salaries = get_info(html.text)
         print(salaries)
@@ -83,7 +94,7 @@ def parse():
             print(salaries[i * 2])
             print(links[i])
             print(salaries[i * 2 + 1])
-            info[number_of_vacancy] = [salaries[i * 2], links[i], salaries[i * 2 + 1].replace(u'\xa0', u' ')]
+            info[number_of_vacancy] = [salaries[i * 2], links[i], salaries[i * 2 + 1].replace(u'\xa0', u' '), day_s[i].replace(u'\xa0', u' ')]
             # .replace('\xa0', " ") - change symbol \xa0 in utf-8 on ' '
             number_of_vacancy = number_of_vacancy + 1
         links.clear()
