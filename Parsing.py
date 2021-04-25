@@ -6,11 +6,12 @@ import json
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-
+from firebase_admin import firestore
 # proxy = {"https": "localhost:8080"} this line turn on proxy
 cred = credentials.Certificate(r'C:\Users\Владимир\Desktop\uirebase\key_firebase.json')
 default_app = firebase_admin.initialize_app(cred, {'databaseURL': 'https://parsing-ebd79-default-rtdb.firebaseio.com/'})
 ref = db.reference("/")
+#storage = firebase_admin.storage.bucket('gs://parsing-ebd79.appspot.com/')
 # help("modules") - give the info about modules downloaded in pc or virtual inviromemental modules
 print("Enter the city")
 city = input()
@@ -64,9 +65,9 @@ def get_day(html):
 
 def get_pages_count(html):  # get the number of pages, which will be scraping
     soup = BeautifulSoup(html, 'html.parser')
-    count_page = soup.find_all('span', class_='pager-item-not-in-short-range')
+    count_page = soup.find_all('a', class_='bloko-button HH-Pager-Control')
     print(count_page)
-    if count_page:
+    if len(count_page) > 1:
         return int(count_page[len(count_page) - 1].get_text())
     else:
         return 1
@@ -94,7 +95,8 @@ def parse():
             print(salaries[i * 2])
             print(links[i])
             print(salaries[i * 2 + 1])
-            info[number_of_vacancy] = [salaries[i * 2], links[i], salaries[i * 2 + 1].replace(u'\xa0', u' '), day_s[i].replace(u'\xa0', u' ')]
+            info[number_of_vacancy] = [salaries[i * 2], links[i], salaries[i * 2 + 1].replace(u'\xa0', u' '),
+                                       day_s[i].replace(u'\xa0', u' ')]
             # .replace('\xa0', " ") - change symbol \xa0 in utf-8 on ' '
             number_of_vacancy = number_of_vacancy + 1
         links.clear()
